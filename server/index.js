@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 
 const authRoutes = require("./routes/auth.js");
-
+ 
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -16,6 +16,6 @@ app.get('/', (req,res) => {
     res.send("suwamelaradio!");
 })
 
-app.use('auth', authRoutes);
+app.use('/auth', authRoutes);
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
