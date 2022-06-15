@@ -14,6 +14,7 @@ const ChannelNameInput = ({ channelName = "", setChannelName }) => {
     <div className="channel-name-input__wrapper">
       <p>Name</p>
       <input
+        required
         value={channelName}
         onChange={handleChange}
         placeholder="channel-name"
@@ -28,6 +29,24 @@ const CreateChannel = ({ createType, setIsCreating }) => {
   const [selectedUsers, setSelectedUsers] = useState([client.userID || ""]);
 
   const [channelName, setChannelName] = useState("");
+
+  const createChannel = async (e) => {
+    e.preventDefault();
+
+    try {
+      const newChannel = await client.channel(createType, channelName, {
+        name: channelName,
+        members: selectedUsers,
+      });
+      await newChannel.watch();
+      setChannelName("");
+      setIsCreating(false);
+      setSelectedUsers([client.userID]);
+      setActiveChannel(newChannel);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
     <div className="create-channel__container">
@@ -46,6 +65,11 @@ const CreateChannel = ({ createType, setIsCreating }) => {
         />
       )}
       <UserList setSelectedUsers={setSelectedUsers} />
+      <div className="create-channel__button-wrapper" onClick={createChannel}>
+        <p>
+          {createType === "team" ? "Create Channel" : "Create Message Group"}
+        </p>
+      </div>
     </div>
   );
 };
